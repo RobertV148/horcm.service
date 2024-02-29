@@ -1,0 +1,31 @@
+##########################################################
+# Date: 27-02-2024
+# Name: horcm.service
+# Description: Start Horcm daemon instances with a systemd service
+# Version: 1
+# Written by: Robert Vrijhof
+##########################################################
+[Unit]
+Description=Hitachi Open Remote Copy Manager
+Documentation=https://download.hitachivantara.com/download/epcra/rd701022.pdf
+ConditionPathExists=/HORCM/usr/bin
+ConditionFileIsExecutable=/HORCM/usr/bin/horcmstart.sh
+ConditionFileIsExecutable=/HORCM/usr/bin/horcmshutdown.sh
+#ConditionOSRelease=8 #Only on Systemd version 249 or higher.
+After=local-fs.target rsyslog.service tuned.service
+
+[Service]
+Type=oneshot
+#For reference, the standard log levels are emergency (0), alert (1), critical (2), error (3), warning (4), notice (5), info (6), and debug (7).
+LogLevelMax=6
+Environment=INST='10 11'
+ExecStart=/bin/sh "/HORCM/usr/bin/horcmstart.sh" $INST
+ExecStop=/bin/sh "/HORCM/usr/bin/horcmshutdown.sh" $INST
+TimeoutStartSec=0
+RemainAfterExit=yes
+Restart=no
+KillMode=none
+
+[Install]
+WantedBy=default.target
+Alias=horcm-srv.service
