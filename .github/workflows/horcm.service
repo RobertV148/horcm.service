@@ -18,6 +18,7 @@ After=local-fs.target rsyslog.service tuned.service
 Type=oneshot
 #For reference, the standard log levels are emergency (0), alert (1), critical (2), error (3), warning (4), notice (5), info (6), and debug (7).
 LogLevelMax=6
+#Add the instances that needs to be started separated by a space.
 Environment=INST='10 11'
 ExecStart=/bin/sh "/HORCM/usr/bin/horcmstart.sh" $INST
 ExecStop=/bin/sh "/HORCM/usr/bin/horcmshutdown.sh" $INST
